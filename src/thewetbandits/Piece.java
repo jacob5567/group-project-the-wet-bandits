@@ -122,7 +122,8 @@ public class Piece {
     public enum Color {
         YELLOW(new java.awt.Color(250, 240, 66)), GREEN(new java.awt.Color(67, 153, 58)), BLUE(
                 new java.awt.Color(24, 30, 219)), RED(java.awt.Color.RED), ORANGE(
-                java.awt.Color.ORANGE), PINK(java.awt.Color.PINK), WHITE(java.awt.Color.WHITE);
+                java.awt.Color.ORANGE), PINK(java.awt.Color.PINK), WHITE(java.awt.Color.WHITE),
+                STAR(new java.awt.Color(245, 191, 66));
 
         private java.awt.Color color;
 
