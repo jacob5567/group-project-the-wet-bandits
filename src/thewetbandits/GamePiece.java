@@ -187,7 +187,7 @@ public class GamePiece extends GCompound {
 	public int getC() {
 		return c;
 	}
-
+//
 	/**
 	 * initializes the image of the piece and sets the size and location of both the
 	 * static and animated images

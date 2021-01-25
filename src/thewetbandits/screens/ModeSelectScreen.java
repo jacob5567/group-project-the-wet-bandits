@@ -28,7 +28,7 @@ public class ModeSelectScreen extends Screen {
 	 * initializes the background and displays the buttons
 	 */
 	private void run() {
-		GImage background = new GImage("boardBG.PNG", 0, 0);
+		GImage background = new GImage("boardBG.png", 0, 0);
 		background.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		add(background);
 		displayMode();
