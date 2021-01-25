@@ -1,6 +1,6 @@
 package thewetbandits;
 
-import PieceGraphics
+import thewetbandits.PieceGraphics;
 import acm.graphics.GPoint;
 
 import javax.swing.*;
@@ -14,13 +14,9 @@ import java.util.Random;
 public class Piece {
     // Attributes
     private static final long serialVersionUID = -7593716498021184989L;
-    private static final int MOVEMENT_SPEED = 5;
     private static final int MOVEMENT_FREQUENCY = 13;
     private static final Random random = new Random();
-
-    private static PieceGraphics graphics;
-
-    private static final ArrayList<WeakReference<GamePiece>> pieces = new ArrayList<>();
+    private static final ArrayList<WeakReference<Piece>> pieces = new ArrayList<>();
 
     static {
         Timer updateTimer = new Timer(MOVEMENT_FREQUENCY, new ActionListener() {
@@ -29,16 +25,16 @@ public class Piece {
                 // Timers are async so synchronize access to the array list so we don't break
                 // everything with CMEs
                 synchronized (pieces) {
-                    Iterator<WeakReference<GamePiece>> iterator = pieces.iterator();
+                    Iterator<WeakReference<Piece>> iterator = pieces.iterator();
                     while (iterator.hasNext()) {
-                        WeakReference<GamePiece> pieceReference = iterator.next();
-                        GamePiece piece = pieceReference.get();
+                        WeakReference<Piece> pieceReference = iterator.next();
+                        Piece piece = pieceReference.get();
                         if (piece == null) {
                             // The piece has been garbage collected, remove it from the list
                             iterator.remove();
                         } else {
-                            if (piece.currentPoint != null)
-                                piece.updateLocation();
+                            if (piece.graphics.getCurrentPoint() != null)
+                                piece.graphics.updateLocation();
                         }
                     }
                 }
@@ -47,17 +43,14 @@ public class Piece {
         updateTimer.start();
     }
 
+    public PieceGraphics graphics;
+
     // color in color enum
-    private GamePiece.Color color;
+    private Piece.Color color;
 
     // PieceGraphics object to correspond to this piece
     // row and column
     private int r, c;
-
-    // animation active boolean
-    private boolean active = false;
-
-    private ArrayList<GPoint> locations = new ArrayList<>();
 
     // Constructors
 
@@ -69,14 +62,11 @@ public class Piece {
         this(spaceSize * (r + 1), spaceSize * (c + 1), size, r, c);
     }
 
-    public Piece(int x, int y, int size, GamePiece.Color color, int r, int c) {
+    public Piece(int x, int y, int size, Piece.Color color, int r, int c) {
         this.color = color;
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.initImage();
         this.r = r;
         this.c = c;
+        this.graphics = new PieceGraphics(x, y, size, color, this);
         // Add the piece to the list of pieces to update
         synchronized (pieces) {
             pieces.add(new WeakReference<>(this));
@@ -86,11 +76,28 @@ public class Piece {
 
     // Methods
 
+    public boolean animating() {
+        return this.graphics.animating();
+    }
+
+    // function to check if pieces are animating
+    public static boolean arePiecesAnimating() {
+        for (WeakReference<Piece> ref : pieces) {
+            Piece p = ref.get();
+            if (p != null) {
+                if (p.animating())
+                    return true;
+            }
+        }
+        return false;
+    }
+
     // function to get a random color
     private static Piece.Color getRandomColor() {
         // choose a random value from all the available colors from the color enum
-        return Piece.Color.values()[random.nextInt(GamePiece.Color.values().length)];
+        return Piece.Color.values()[random.nextInt(Piece.Color.values().length)];
     }
+
 
     // setter for the row and column values
     public void updateRowCol(int r, int c) {

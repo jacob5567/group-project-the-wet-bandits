@@ -16,12 +16,13 @@ public class PieceGraphics extends GCompound {
     private GImage imageAnimated;
     private GOval testOval;
     private Piece.Color color;
+
+    private Piece piece;
     // animation active boolean
     private boolean active = false;
 
     private int x, y, size;
     private static final int MOVEMENT_SPEED = 5;
-    private static final int MOVEMENT_FREQUENCY = 13;
     private ArrayList<GPoint> locations = new ArrayList<>();
 
     private GPoint currentPoint;
@@ -29,11 +30,12 @@ public class PieceGraphics extends GCompound {
     // Constructors
 
     // constructor with x, y, size, and color
-    public PieceGraphics(int x, int y, int size, Piece.Color color) {
+    public PieceGraphics(int x, int y, int size, Piece.Color color, Piece piece) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = color;
+        this.piece = piece;
         this.initImage();
     }
 
@@ -83,13 +85,21 @@ public class PieceGraphics extends GCompound {
         return !this.locations.isEmpty() || this.currentPoint != null;
     }
 
+    public GPoint getCurrentPoint() {
+        return currentPoint;
+    }
+
+    public Piece getPiece() {
+        return piece;
+    }
+
     public void toggleActive() {
         this.active = !this.active;
         this.updateImage();
     }
 
     // function to update a piece's location
-    private void updateLocation() {
+    public void updateLocation() {
         double dx = this.currentPoint.getX() - this.getX();
         double dy = this.currentPoint.getY() - this.getY();
 
